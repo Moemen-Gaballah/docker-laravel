@@ -1,4 +1,4 @@
-# docker-image-laravel
+# docker-laravel
 
 
 ## Docker Tutorial for Beginners
