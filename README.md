@@ -7,7 +7,9 @@
 
 [article](https://www.digitalocean.com/community/tutorials/how-to-set-up-laravel-nginx-and-mysql-with-docker-compose) 
 
-git clone 
+## git clone 
+
 after it run command 
-docker-compose up -d
+
+### docker-compose up -d
 
