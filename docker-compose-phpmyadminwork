@@ -1,0 +1,39 @@
+#MySQL Service
+version: "3.7"
+services:
+  db:
+    image: mysql:5.7.22
+    container_name: db
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: laravel
+      MYSQL_ROOT_PASSWORD: laravel
+      SERVICE_TAGS: dev
+      SERVICE_NAME: db
+    volumes:
+      - ./dbdata:/var/lib/mysql/
+      - ./mysql/my.cnf:/etc/mysql/my.cnf
+    networks:
+      - app-network
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    environment:
+      PMA_HOST: db
+      MYSQL_ROOT_PASSWORD: laravel
+    ports:
+      - "8081:80"
+    depends_on:
+      - db
+    links:
+      - db
+    restart: unless-stopped
+    networks:
+      - app-network
+networks:
+  app-network:
+    name: app-network
+    driver: bridge

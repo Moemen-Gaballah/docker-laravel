@@ -1,3 +1,4 @@
+#MySQL Service
 version: '3'
 services:
 
@@ -6,7 +7,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: digitalocean.com/php
     container_name: app
     restart: unless-stopped
     tty: true
@@ -34,8 +34,6 @@ services:
       - ./nginx/conf.d/:/etc/nginx/conf.d/
     networks:
       - app-network
-
-  #MySQL Service
   db:
     image: mysql:5.7.22
     container_name: db
@@ -45,20 +43,30 @@ services:
       - "3306:3306"
     environment:
       MYSQL_DATABASE: laravel
-      MYSQL_ROOT_PASSWORD: your_mysql_root_password
+      MYSQL_ROOT_PASSWORD: laravel
       SERVICE_TAGS: dev
-      SERVICE_NAME: mysql
+      SERVICE_NAME: db
     volumes:
-      - dbdata:/var/lib/mysql/
+      - ./dbdata:/var/lib/mysql/
       - ./mysql/my.cnf:/etc/mysql/my.cnf
     networks:
       - app-network
-
-#Docker Networks
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    environment:
+      PMA_HOST: db
+      MYSQL_ROOT_PASSWORD: laravel
+    ports:
+      - "8081:80"
+    depends_on:
+      - db
+    links:
+      - db
+    restart: unless-stopped
+    networks:
+      - app-network
 networks:
   app-network:
+    name: app-network
     driver: bridge
-#Volumes
-volumes:
-  dbdata:
-    driver: local
